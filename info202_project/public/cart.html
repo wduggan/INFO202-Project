@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="ShoppingApp" ng-controller="CustomerController as custCtrl">
+	<head>
+		<title>INFO202 Webpage: Shopping Cart</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link rel="stylesheet" type="text/css" href="css/style.css">
+		<script src="js/angular.js"></script>
+		<script src="js/angular-resource.js"></script>
+		<script src="js/ngStorage.js"></script>
+		<script src="js/shopping.js"></script>
+	</head>
+
+	<body ng-controller="CartController as cartCtrl">
+		<header>
+			<nav>
+				<ul>
+					<li><a href="signedInIndex.html">Home</a></li>
+					<li><a href="viewProducts.html">Browse Products</a></li>
+					<li><a>View Cart</a></li>
+					<li><a href="" ng-click="custCtrl.signOut()">Sign Out</a></li>
+				</ul>
+			</nav>
+<!--			<div ng-include="'menu.html'" ></div>-->
+		</header>
+		<div id="welcome">{{custCtrl.welcome}}</div>
+
+		<h1>Shopping Cart</h1>
+
+		<main class="boxes">
+				<table>
+					<thead>
+						<tr>
+							<th>Product</th>
+							<th>Price</th>
+							<th>Quantity</th>
+							<th>Total</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="item in cartCtrl.items">
+							<td>{{item.product.name}}</td>
+							<td>{{item.salePrice}}</td>
+							<td>{{item.quantityPurchased}}</td>
+							<td>{{item.getItemTotal() | currency}}</td>
+						</tr>
+						<tr>
+							<th>Total Cost:</th>
+							<td></td>
+							<td></td>
+							<td>{{cartCtrl.total | currency}}</td>
+						</tr>
+					</tbody>
+				</table>
+
+				<div class="btn-group">
+					<button ng-click="cartCtrl.checkOut()">Checkout Cart</button>
+				</div> 
+		</main>
+
+		<footer class="boxes">
+			<p>We sell the biggest range of frobnostificators, widgets, and doohickies!</p>
+		</footer>
+
+	</body>
+
+</html>
