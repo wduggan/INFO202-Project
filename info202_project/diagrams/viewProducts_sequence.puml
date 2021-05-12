@@ -1,0 +1,53 @@
+@startuml
+
+skinparam {
+  Style StrictUML
+  SequenceStereotype {
+    Font {
+      Size 10
+      Style plain
+    }
+  }
+}
+
+actor "User" as user
+participant "MainMenu" as menu <<form>>
+participant "ProductViewer" as form <<gui>>
+participant "dao : ProductCollectionsDAO" as dao <<data store>>
+participant "productsModel : SimpleListModel" as products
+participant "categoryModel : SimpleListModel" as categories
+participant "Product" as domain <<domain>>
+
+user -> menu : Click "View products"
+menu++
+
+menu -> form : displayForm()
+form++
+
+form -> dao : getProducts()
+dao++
+return productsList
+
+form -> products : updateItems(productList)
+
+form -> domain : getProductID()
+domain++
+return productID
+
+form -> domain : getName()
+domain++
+return name
+
+form -> domain : getCategory()
+domain++
+return category
+form -> categories : updateItems(categoryList)
+
+return
+return Display items
+
+user -> form : Click "Exit"
+form -> menu : dispose()
+
+
+@enduml

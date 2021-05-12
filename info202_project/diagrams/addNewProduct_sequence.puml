@@ -1,0 +1,56 @@
+@startuml
+
+skinparam {
+  Style StrictUML
+  SequenceStereotype {
+    Font {
+      Size 10
+      Style plain
+    }
+  }
+}
+
+actor "User" as user
+participant "MainMenu" as menu <<form>>
+participant "ProductEditor" as form <<form>>
+participant "Product" as domain <<domain>>
+participant "dataStore : ProductCollectionsDAO" as dao <<data store>>
+participant "categoryModel : SimpleListModel" as categories
+
+user -> menu : Click "Add a new product"
+menu++
+
+menu -> form : displayForm()
+form++
+
+user -> form : Enter Product Details
+
+user -> form : Click "Save"
+
+form -> domain : Create new instance\nof Product (product)
+domain++
+
+form -> domain : setProductID()
+
+form -> domain : setName()
+
+
+form -> domain : setDescription()
+
+
+form -> domain : setCategory()
+form -> categories : updateItems(categoryList)
+
+
+form -> domain : setListPrice()
+
+
+form -> domain : setQuanitityInStock()
+
+form -> dao : saveProduct(product)
+dao++
+
+form -> menu : dispose()
+
+
+@enduml

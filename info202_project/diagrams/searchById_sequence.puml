@@ -1,0 +1,64 @@
+@startuml
+' style tweaks to make the diagram a little more readable
+skinparam {
+	Style strictuml
+	RoundCorner 5
+        Database {
+		' the default border no longer matches the normal colours (bug?), so fix this
+		BorderColor #A80036
+	}
+	Sequence {
+		' make activations yellow too
+		LifeLineBackgroundColor #FDFDCD
+
+		' make stereotypes less ugly
+		Stereotype {
+			Font {
+				Size 11
+				Style plain
+			}
+		}
+	}
+}
+
+actor Customer as customer
+participant ":index.html" as index <<index>>
+participant ":viewProducts.html" as products <<index>>
+participant ":AngularJS Product Controller" as controller <<framework>>
+participant ":Jooby Module" as module <<framework>>
+participant "dao\n:ProductJdbcDAO" as dao <<ProductDAO>>
+database "H2\nDatabase" as db
+
+create dao
+main -> dao : <<construct>>
+
+create menu
+main -> menu : <<construct(dao)>>
+
+customer -> menu++ : clicks 'View Products'
+
+create dialog
+menu -> dialog++ : <<construct(dao)>>
+
+dialog -> dao : getProducts()
+dao++
+dao -> db++ : select * from product
+return ResultSet
+return products
+
+create model
+
+dialog -> model : <<construct>>
+
+dialog -> model++ : updateItems(products)
+model--
+
+
+dialog -> dialog : listViewProducts.setModel(productsModel)
+
+return
+
+menu -> dialog++ : setVisible(true)
+
+destroy dialog
+@enduml

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="ShoppingApp">
+	<head>
+		<title>INFO202 Webpage: Create Account</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link rel="stylesheet" type="text/css" href="css/style.css">
+		<script src="js/angular.js"></script>
+		<script src="js/angular-resource.js"></script>
+		<script src="js/ngStorage.js"></script>
+		<script src="js/shopping.js"></script>
+	</head>
+
+	<body ng-controller="CustomerController as custCtrl">
+		<header>
+			<nav>
+				<ul>
+					<li><a href="index.html">Home</a></li>
+					<li><a href="signIn.html">Sign In</a></li>
+				</ul>
+			</nav>
+<!--			<div ng-include="'menu.html'" ></div>-->
+		</header>
+
+		<h1>Create an Account</h1>
+
+		<main>
+			<section class="boxes">
+            <h2>Please create an account.</h2>
+
+				<form ng-submit="custCtrl.registerCustomer(customer)">
+					<fieldset class="textInputs">
+						<legend>Account Details</legend>
+						<ul>
+							<li><label for="username">Username: </label><input type="text" ng-model="customer.username" id="username" tabindex="1" required pattern="[a-zA-Z '-]+" placeholder="Please enter your username"></li>
+							<li><label for="firstName">First name: </label><input type="text" ng-model="customer.firstName" id="firstName" tabindex="2" required pattern="[a-zA-Z '-]+" placeholder="Please enter your first name"></li>
+							<li><label for="surName">Surname: </label><input type="text" ng-model="customer.surName" id="surName" tabindex="3" required pattern="[a-zA-Z '-]+" placeholder="Please enter your last name"></li>
+							<li><label for="dob">Birthday: </label><input type="date" id="dob" tabindex="4"></li>
+							<li><label for="emailAddress">Email address: </label><input type="email" ng-model="customer.emailAddress" id="emailAddress" tabindex="5" required placeholder="Please enter your email address"></li>
+							<li><label for="shippingAddress">Shipping Address: </label><input type="text"  ng-model="customer.shippingAddress" id="shippingAddress" tabindex="6" required pattern="[a-zA-Z0-9 '-]+" placeholder="Please enter your address"></li>
+							<li><label for="password">Password: </label><input type="password" ng-model="customer.password" id="password" tabindex="7" required placeholder="Please enter your password"></li>
+						</ul>
+					</fieldset>
+					<fieldset>
+						<label><input type="reset" name="reset" value="Reset"></label>
+						<label><input type="submit" name="submit" value="Create Account"></label>
+					</fieldset>
+            </form>
+
+			</section>
+		</main>
+
+		<footer class="boxes">
+			<p>We sell the biggest range of frobnostificators, widgets, and doohickies!</p>
+		</footer>
+
+	</body>
+
+</html>

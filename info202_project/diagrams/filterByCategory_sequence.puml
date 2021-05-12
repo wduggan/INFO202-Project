@@ -1,0 +1,100 @@
+@startuml
+' style tweaks to make the diagram a little more readable
+skinparam {
+	Style strictuml
+	RoundCorner 5
+        Database {
+		' the default border no longer matches the normal colours (bug?), so fix this
+		BorderColor #A80036
+	}
+	Sequence {
+		' make activations yellow too
+		LifeLineBackgroundColor #FDFDCD
+
+		' make stereotypes less ugly
+		Stereotype {
+			Font {
+				Size 11
+				Style plain
+			}
+		}
+	}
+}
+
+actor User as user
+participant ":Main" as main
+participant ":MainMenu" as menu <<frame>>
+participant ":ProductViewer" as dialog <<dialog>>
+participant "dao\n:ProductJdbcDAO" as dao <<ProductDAO>>
+participant "categoryModel\n:SimpleListModel" as categoryModel
+participant "productModel\n:SimpleListModel" as model
+database "H2\nDatabase" as db
+
+create dao
+main -> dao : <<construct>>
+
+create menu
+main -> menu : <<construct(dao)>>
+
+user -> menu++ : clicks 'View Products'
+
+create dialog
+menu -> dialog++ : <<construct(dao)>>
+
+dialog -> dao : getProducts()
+dao++
+dao -> db++ : select * from product
+return ResultSet
+return products
+
+create model
+
+dialog -> model : <<construct>>
+
+dialog -> model++ : updateItems(products)
+model--
+
+
+dialog -> dialog : listViewProducts.setModel(productsModel)
+
+dialog -> dao : getCategories()
+dao++
+dao -> db++ : select distinct category from product
+return ResultSet
+return categories
+
+create categoryModel
+dialog -> categoryModel : « construct »
+
+dialog -> categoryModel++ : updateItems(categories)
+categoryModel--
+
+
+dialog -> dialog : cmbCategory.setModel(categoryModel)
+return
+
+menu -> dialog++ : setVisible(true)
+
+
+user -> dialog++ : selects Category
+
+
+dialog -> dialog : comboCategory.getSelectedItem();
+
+dialog -> dao++ : filterByCategory(category)
+dao -> db++ : select * from Product where category = ?
+return ResultSet
+return
+
+
+dialog -> model++ : updateItems(dao.filterByCategory())
+model--
+
+dialog -> dialog : setModel(productsModel)
+
+dialog -> dialog : dispose()
+
+dialog -->  menu
+
+destroy dialog
+@enduml

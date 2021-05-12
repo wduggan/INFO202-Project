@@ -1,0 +1,54 @@
+@startuml
+
+skinparam {
+  Style StrictUML
+  SequenceStereotype {
+    Font {
+      Size 10
+      Style plain
+    }
+  }
+}
+
+actor "Customer" as customer
+participant "viewProducts" as view <<HTML>>
+participant "ProductController" as controller <<AngularJS Controller>>
+participant "productAPI" as api <<Angular Module Factory>>
+participant "Java Server" as server <<Jooby Server>>
+participant "Product Module" as module <<Jooby Module>>
+participant "ProductDAO" as dao <<data store>>
+
+customer -> view : Clicks "Browse Products"
+view++
+
+view -> controller : ng-controller creates prodCtrl
+controller++
+
+controller -> api : productAPI.query()
+api++
+
+api -> server : productAPI.query()
+server++
+
+server -> module : Web Server/HTTP calls\nget /api/products
+module++
+
+module -> dao : productDao.getProducts()
+dao++
+return Collection<Product>\n(products)
+
+return products (in Java format)
+server -> server : converts products to\nJSON format
+return products (in JSON format)
+api -> api : converts products to\nJavaScript format
+return products (in JS format)
+return
+
+view -> controller : ng-repeats product\nin prodCtrl.products
+controller++
+controller -> controller : calls product data fields
+return merges fields into table
+
+return Products Displayed\nin Table
+
+@enduml

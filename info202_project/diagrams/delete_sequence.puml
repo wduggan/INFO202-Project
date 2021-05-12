@@ -1,0 +1,84 @@
+@startuml
+' style tweaks to make the diagram a little more readable
+skinparam {
+	Style strictuml
+	RoundCorner 5
+        Database {
+		' the default border no longer matches the normal colours (bug?), so fix this
+		BorderColor #A80036
+	}
+	Sequence {
+		' make activations yellow too
+		LifeLineBackgroundColor #FDFDCD
+
+		' make stereotypes less ugly
+		Stereotype {
+			Font {
+				Size 11
+				Style plain
+			}
+		}
+	}
+}
+
+actor User as user
+participant ":Main" as main
+participant ":MainMenu" as menu <<frame>>
+participant ":ProductViewer" as dialog <<dialog>>
+participant "dao\n:ProductJdbcDAO" as dao <<ProductDAO>>
+participant "productModel\n:SimpleListModel" as model
+database "H2\nDatabase" as db
+
+create dao
+main -> dao : <<construct>>
+
+create menu
+main -> menu : <<construct(dao)>>
+
+user -> menu++ : clicks 'View Products'
+
+create dialog
+menu -> dialog++ : <<construct(dao)>>
+
+dialog -> dao : getProducts()
+dao++
+dao -> db++ : select * from product
+return ResultSet
+return products
+
+create model
+
+dialog -> model : <<construct>>
+
+dialog -> model++ : updateItems(products)
+model--
+
+
+dialog -> dialog : listViewProducts.setModel(productsModel)
+
+return
+
+menu -> dialog++ : setVisible(true)
+
+
+user -> dialog++ : clicks desired product to delete
+user -> dialog++ : clicks 'Delete'
+
+
+dialog -> dialog : selectedProduct = listViewProducts.getSelectedValue()
+
+dialog -> dao++ : removeProduct(selectedProduct)
+dao -> db++ : delete from Product where Product_Id = ?
+return ResultSet
+return
+
+
+dialog -> model++ : updateItems(dao.getProducts()
+model--
+
+dialog -> dialog : dispose()
+
+dialog -->  menu
+
+destroy dialog
+@enduml
